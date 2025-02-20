@@ -799,6 +799,7 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
+```
 
 Kodumuzu inceleyelim: 
 Öncelikle, süreç adını argümanlardan alıyoruz. Ardından, isme göre süreç ID'sini bulup yazdırıyoruz.

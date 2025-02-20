@@ -2,6 +2,8 @@
 
 Why is the book called that? **MD** - means **M**alware **D**evelopment, The **MZ** signature is a signature used by the MS-DOS relocatable `16-bit` EXE format and its still present in today's PE files for backwards compatibility, also **MD MZ** means **M**y **D**aughter **M**unira **Z**hassulankyzy.     
 
+![cover](./cover.png)    
+
 **I dedicate this book to my beloved wife, Laura, my hero son, Yerzhan, and my little princess, Munira, and I thank them for their inspiration, support, and patience.**    
 
 ### versions and translations

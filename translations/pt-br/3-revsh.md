@@ -23,7 +23,7 @@ Os três passos para obter uma shell reversa são:
 
 Outra abordagem para obter uma shell reversa em ataques reais é através da engenharia social. Por exemplo, um malware instalado em uma estação de trabalho via e-mail de phishing ou um site malicioso pode iniciar uma conexão de saída com um servidor de comando e controle (C2) e fornecer aos hackers acesso remoto.
 
-![engenharia social](./images/pt-br/4/shells2.png){width="80%"}
+![engenharia social](./images/4/shells2.png){width="80%"}
 
 O objetivo deste post não é explorar uma vulnerabilidade específica em um host ou rede, mas sim entender como identificar uma vulnerabilidade que possa ser usada para execução de código.
 

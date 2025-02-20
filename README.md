@@ -24,3 +24,7 @@ pandoc -f markdown-implicit_figures --pdf-engine=xelatex -V mainfont="Amiri" -V 
 Main font:     
 
 [Amiri](https://fonts.google.com/specimen/Amiri)      
+
+other books:
+
+[Malware Development for Ethical Hackers (Packt, 2024)](https://github.com/PacktPublishing/Malware-Development-for-Ethical-Hackers/)

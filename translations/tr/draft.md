@@ -430,6 +430,7 @@ WriteProcessMemory
 CreateRemoteThread  
 OpenProcess  
 Kaynak kod Git hub’ta: https://github.com/cocomelonc/2021-09-19-injection-1
+
 5. Klasik DLL enjeksiyonu işlemi. Basit C++ zararlı yazılım.
 Bismillah in Arabic 
 Bu bölümde, debugging API kullanılarak yapılan klasik bir DLL enjeksiyonu tekniğini ele alacağız.  

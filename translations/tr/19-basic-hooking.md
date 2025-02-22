@@ -380,7 +380,7 @@ ve çalıştıralım:
 
 ![api hooking 18](./images/27/2021-11-30_18-38.png){width="80%"}    
 
-Yani her şey umduğumuz gibi gitti.     
+Her şey mükemmel bir şekilde çalıştı.    
 
 [Github'ki kaynak kod](https://github.com/cocomelonc/2021-11-30-basic-hooking-1)   
 [MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox)    

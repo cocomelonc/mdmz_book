@@ -5,7 +5,7 @@
 
 ![win32 shellcoding](./images/16/2021-10-27_19-24.png){width="80%"}          
 
-В предыдущих разделах про shellcoding мы работали с примерами для Linux. В этом разделе моя цель — написать shellcode для Windows.        
+В предыдущих разделах про shellcoding мы работали с примерами для Linux. В этом разделе моя цель - написать shellcode для Windows.        
 
 ### тестирование shellcode
 

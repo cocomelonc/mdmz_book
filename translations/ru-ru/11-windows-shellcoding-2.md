@@ -52,7 +52,7 @@ jmp  eax              ; выполняем функцию ExitProcess
 
 ### Структуры TEB и PEB
 
-Каждый раз, когда мы выполняем exe-файл, первое, что создается (по крайней мере, насколько я знаю) в ОС, — это [PEB](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb):                  
+Каждый раз, когда мы выполняем exe-файл, первое, что создается (по крайней мере, насколько я знаю) в ОС, - это [PEB](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb):                  
  
 ```cpp
 typedef struct _PEB {

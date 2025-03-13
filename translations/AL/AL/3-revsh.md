@@ -11,7 +11,11 @@ Reverse shell ose shpesh i quajtur  "connect-back shell" është një shell në 
 
 ![rev shells](./images/4/shells.png)
 
-The reverse shell can take the advantage of common outbound ports such as port `80, 443, 8080` and etc.
+Reverse shell mund të përfitojë nga portet e njohura dalëse, si p.sh `80, 443, 8080`, etj.
+
+Shell-i i kundërt(reverse shell) zakonisht përdoret kur makina e viktimës po bllokon lidhjet hyrëse nga disa porta përmes një firewall-i. Për të kapërcyer këtë kufizim të firewall, red team-ët dhe pentester-at përdorin reverse shell.
+
+Megjithatë, ka një rrezik. Kjo mund të ekspozojë serverin e kontrollit të sulmuesit dhe gjurmët mund të zbulohen nga shërbimet e monitorimit të sigurisë së rrjetit të objektivit.
 
 The reverse shell usually used when the target victim machine is blocking incoming connection from certain port by firewall. To bypass this firewall restriction, red teamers and pentesters use reverse shells.
 

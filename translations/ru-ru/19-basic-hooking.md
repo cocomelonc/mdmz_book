@@ -1,7 +1,7 @@
 \newpage
 \subsection{19. перехват API Windows. Простой пример на C++.}
 
-﷽
+الرَّحِيمِ الرَّحْمَٰنِ للَّهِ بِسْمِ 
 
 ![api hooking](./images/27/2021-11-30_17-00.png){width="80%"}    
 

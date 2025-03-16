@@ -1,7 +1,7 @@
 \newpage
 \subsection{8. Shellcoding в Linux. Примеры}
 
-﷽
+الرَّحِيمِ الرَّحْمَٰنِ للَّهِ بِسْمِ 
 
 ![linux shellcoding](./images/12/2021-10-11_01-00.png){width="80%"}          
 

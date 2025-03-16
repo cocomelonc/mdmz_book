@@ -1,7 +1,7 @@
 \newpage
 \subsection{6. DLL-hijacking в Windows. Простой пример на C.}
 
-﷽
+الرَّحِيمِ الرَّحْمَٰنِ للَّهِ بِسْمِ 
 
 ![DLL hijacking](./images/8/2021-09-25_12-09.png){width="75%"}
 

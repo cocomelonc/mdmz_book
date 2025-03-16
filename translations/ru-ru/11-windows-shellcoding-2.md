@@ -1,7 +1,7 @@
 \newpage
 \subsection{11. Windows Shellcoding - Часть 2. Поиск адреса kernel32}
 
-﷽
+الرَّحِيمِ الرَّحْمَٰنِ للَّهِ بِسْمِ 
 
 ![win32 shellcoding](./images/17/2021-10-30_16-30.png){width="80%"}         
 

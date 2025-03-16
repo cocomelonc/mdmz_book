@@ -1,7 +1,7 @@
 \newpage
 \subsection{12. Windows Shellcoding - Часть 3. Формат PE-файла}
 
-﷽
+الرَّحِيمِ الرَّحْمَٰنِ للَّهِ بِسْمِ 
 
 ![pe file](./images/18/2021-10-31_21-19.png){width="80%"}         
 

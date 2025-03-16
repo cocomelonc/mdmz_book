@@ -1,0 +1,10 @@
+\usepackage{fontspec}
+\setmainfont{Fira Mono}
+\newfontfamily\arabicfont[Script=Arabic]{Amiri}
+
+\usepackage{babel}
+\babelprovide[import, main]{russian}
+\babelprovide[import]{arabic}
+
+\babelfont[russian]{rm}{Courier New}
+\babelfont[arabic]{rm}{Amiri}

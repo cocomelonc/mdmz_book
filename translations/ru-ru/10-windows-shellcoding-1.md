@@ -1,7 +1,7 @@
 \newpage
 \subsection{10. Windows Shellcoding - Часть 1. Простой пример}
 
-﷽
+الرَّحِيمِ الرَّحْمَٰنِ للَّهِ بِسْمِ 
 
 ![win32 shellcoding](./images/16/2021-10-27_19-24.png){width="80%"}          
 

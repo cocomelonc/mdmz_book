@@ -1,7 +1,7 @@
 \newpage
 \subsection{9. Shellcoding в Linux. Обратный TCP shellcode}
 
-﷽
+الرَّحِيمِ الرَّحْمَٰنِ للَّهِ بِسْمِ 
 
 ![linux shellcoding](./images/14/2021-10-16_11-42.png){width="80%"}          
 

@@ -447,4 +447,4 @@ gcc -z execstack -m32 -o run run.c
 [my intro to x86 assembly](https://cocomelonc.github.io/tutorial/2021/10/03/malware-analysis-1.html)          
 [my nasm tutorial](https://cocomelonc.github.io/tutorial/2021/10/08/malware-analysis-2.html)           
 [execve](https://man7.org/linux/man-pages/man2/execve.2.html)         
-[Source code in Github](https://github.com/cocomelonc/2021-10-09-linux-shellcoding-1)         
+[исходный код на Github](https://github.com/cocomelonc/2021-10-09-linux-shellcoding-1)         

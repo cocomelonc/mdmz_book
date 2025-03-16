@@ -179,7 +179,7 @@ nc 10.9.1.19 4444 -w 3 < shell
 
 ![run](./images/4/2021-09-11_19-41.png){width="80%"}
 
-[Source code in Github](https://github.com/cocomelonc/2021-09-11-reverse-shells)
+[исходный код на Github](https://github.com/cocomelonc/2021-09-11-reverse-shells)
 
 ***
 

@@ -21,27 +21,27 @@ API-хуки - это техника, позволяющая перехваты�
 
 ```cpp
 /*
- hook.cpp
- Простой пример API-хука с методом push/retn
- Автор: @cocomelonc
- https://cocomelonc.github.io/tutorial/
- 2022/03/08/basic-hooking-2.html
+hooking.cpp
+basic hooking example with push/retn method
+author: @cocomelonc
+https://cocomelonc.github.io/tutorial/
+2022/03/08/basic-hooking-2.html
 */
 #include <windows.h>
 
-// буфер для сохранения оригинальных байтов
+// buffer for saving original bytes
 char originalBytes[6];
 
 FARPROC hookedAddress;
 
-// адрес, на который будет происходить переход после установки хука
+// we will jump to after the hook has been installed
 int __stdcall myFunc(LPCSTR lpCmdLine, UINT uCmdShow) {
   WriteProcessMemory(GetCurrentProcess(), 
   (LPVOID)hookedAddress, originalBytes, 6, NULL);
   return WinExec("mspaint", uCmdShow);
 }
 
-// Логика перехвата
+// hooking logic
 void setMySuperHook() {
   HINSTANCE hLib;
   VOID *myFuncAddress;
@@ -51,22 +51,22 @@ void setMySuperHook() {
   DWORD dst;
   CHAR patch[6]= {0};
 
-  // получаем адрес памяти функции WinExec
+  // get memory address of function WinExec
   hLib = LoadLibraryA("kernel32.dll");
   hookedAddress = GetProcAddress(hLib, "WinExec");
 
-  // сохраняем первые 6 байтов в буфер originalBytes
+  // save the first 6 bytes into originalBytes (buffer)
   ReadProcessMemory(GetCurrentProcess(), 
   (LPCVOID) hookedAddress, 
   originalBytes, 6, NULL);
 
-  // перезаписываем первые 6 байтов, добавляя переход на myFunc
+  // overwrite the first 6 bytes with a jump to myFunc
   myFuncAddress = &myFunc;
 
-  // создаём патч "push <addr>, retn"
-  memcpy_s(patch, 1, "\x68", 1); // 0x68 - opcode для push
+  // create a patch "push <addr>, retn"
+  memcpy_s(patch, 1, "\x68", 1); // 0x68 opcode for push
   memcpy_s(patch + 1, 4, &myFuncAddress, 4);
-  memcpy_s(patch + 5, 1, "\xC3", 1); // 0xC3 - opcode для retn
+  memcpy_s(patch + 5, 1, "\xC3", 1); // opcode for retn
 
   WriteProcessMemory(GetCurrentProcess(), 
   (LPVOID)hookedAddress, patch, 6, NULL);
@@ -74,15 +74,17 @@ void setMySuperHook() {
 
 int main() {
 
-  // вызываем оригинальную функцию
+  // call original
   WinExec("notepad", SW_SHOWDEFAULT);
 
-  // устанавливаем хук
+  // install hook
   setMySuperHook();
 
-  // вызываем после установки хука
+  // call after install hook
   WinExec("notepad", SW_SHOWDEFAULT);
+
 }
+
 ```
 
 Как видно, исходный код идентичен примеру из первого раздела про хуки. Единственное отличие:    
@@ -91,13 +93,8 @@ int main() {
 
 Этот код переводится в следующие инструкции ассемблера:    
 
-```nasm
-// поместить в стек адрес функции myFunc
-push myFunc
-
-// перейти к выполнению myFunc
-retn
-```
+`push myFunc`  ; поместить в стек адрес функции myFunc
+`retn`         ; перейти к выполнению myFunc
 
 ### демо
 

@@ -12,17 +12,17 @@
 При тестировании shellcode удобно просто вставить его в программу и запустить. Мы будем использовать тот же код, что и в первом посте (`run.c`):           
 ```cpp
 /*
-run.c - небольшой каркас программы для выполнения shellcode
+run.c - a small skeleton program to run shellcode
 */
-// здесь будет байт-код
-char code[] = "мой shellcode";
+// bytecode here
+char code[] = "my shellcode here";
 
 int main(int argc, char **argv) {
-  int (*func)();             // указатель на функцию
-  func = (int (*)()) code;   // func указывает на наш shellcode
-  (int)(*func)();            // выполняем код в code[]
-  // если программа вернула 0 вместо 1,
-  // значит, shellcode сработал
+  int (*func)();             // function pointer
+  func = (int (*)()) code;   // func points to our shellcode
+  (int)(*func)();            // execute a function code[]
+  // if our program returned 0 instead of 1, 
+  // so our shellcode worked
   return 1;
 }
 ```
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 Сначала мы напишем что-то вроде прототипа shellcode на C. Для простоты напишем следующий исходный код (`exit.c`): 
 ```cpp
 /*
-exit.c - запуск calc.exe и выход
+exit.c - run calc.exe and exit
 */
 #include <windows.h>
 
@@ -68,25 +68,25 @@ i686-w64-mingw32-gcc -o exit.exe exit.c -mconsole -lkernel32
 
 ```cpp
 /*
-getaddr.c - получение адресов функций 
-(ExitProcess, WinExec) в памяти
+getaddr.c - get addresses of functions 
+(ExitProcess, WinExec) in memory
 */
 #include <windows.h>
 #include <stdio.h>
 
 int main() {
-  unsigned long Kernel32Addr;      // адрес kernel32.dll
-  unsigned long ExitProcessAddr;   // адрес ExitProcess
-  unsigned long WinExecAddr;       // адрес WinExec
+  unsigned long Kernel32Addr;      // kernel32.dll address
+  unsigned long ExitProcessAddr;   // ExitProcess address
+  unsigned long WinExecAddr;       // WinExec address
 
   Kernel32Addr = GetModuleHandle("kernel32.dll");
-  printf("Адрес KERNEL32 в памяти: 0x%08p\n", Kernel32Addr);
+  printf("KERNEL32 address in memory: 0x%08p\n", Kernel32Addr);
 
   ExitProcessAddr = GetProcAddress(Kernel32Addr, "ExitProcess");
-  printf("Адрес ExitProcess в памяти: 0x%08p\n", ExitProcessAddr);
+  printf("ExitProcess address in memory is: 0x%08p\n", ExitProcessAddr);
 
   WinExecAddr = GetProcAddress(Kernel32Addr, "WinExec");
-  printf("Адрес WinExec в памяти: 0x%08p\n", WinExecAddr);
+  printf("WinExec address in memory is: 0x%08p\n", WinExecAddr);
 
   getchar();
   return 0;
@@ -137,23 +137,23 @@ for chunk in chunks[::-1]:
 
 Затем создаем наш ассемблерный код:
 ```nasm
-xor  ecx, ecx         ; обнуляем ecx
-push ecx              ; нулевой терминатор строки 0x00 для 
-                      ; строки "calc.exe"
+xor  ecx, ecx         ; zero out ecx
+push ecx              ; string terminator 0x00 for 
+                      ; "calc.exe" string
 push 0x6578652e       ; exe. : 6578652e
 push 0x636c6163       ; clac : 636c6163
 
-mov  eax, esp         ; сохраняем указатель на "calc.exe" 
-                      ; в ebx
+mov  eax, esp         ; save pointer to "calc.exe" 
+                      ; string in ebx
 
 ; UINT WinExec([in] LPCSTR lpCmdLine, [in] UINT uCmdShow);
 inc  ecx              ; uCmdShow = 1
-push ecx              ; uCmdShow *указатель в стек на 
-                      ; 2-ю позицию - LIFO
-push eax              ; lpcmdLine *указатель в стек на 
-                      ; 1-ю позицию
-mov  ebx, 0x76f0e5fd  ; вызов функции WinExec() 
-                      ; по адресу в kernel32.dll
+push ecx              ; uCmdShow *ptr to stack in 
+                      ; 2nd position - LIFO
+push eax              ; lpcmdLine *ptr to stack in 
+                      ; 1st position
+mov  ebx, 0x76f0e5fd  ; call WinExec() function 
+                      ; addr in kernel32.dll
 call ebx
 ```
 
@@ -167,11 +167,11 @@ void ExitProcess(UINT uExitCode);
 Эта функция используется для корректного завершения хост-процесса после запуска `calc.exe` с помощью `WinExec`:       
 ```nasm
 ; void ExitProcess([in] UINT uExitCode);
-xor  eax, eax         ; обнуляем eax
-push eax              ; кладем NULL в стек
-mov  eax, 0x76ed214f  ; вызов функции ExitProcess 
-                      ; по адресу в kernel32.dll
-jmp  eax              ; выполняем функцию ExitProcess
+xor  eax, eax         ; zero out eax
+push eax              ; push NULL
+mov  eax, 0x76ed214f  ; call ExitProcess 
+                      ; function addr in kernel32.dll
+jmp  eax              ; execute the ExitProcess function
 ```
 
 Итак, финальный код:
@@ -250,20 +250,20 @@ sed 's/$/"/g'
 Теперь заменяем код в `run.c` следующим:
 ```cpp
 /*
-run.c - небольшой каркас программы для выполнения shellcode
+run.c - a small skeleton program to run shellcode
 */
-// вставляем наш байт-код
+// bytecode here
 char code[] = "\x31\xc9\x51\x68\x2e\x65\x78\x65\x68\x63\x61"
 "\x6c\x63\x89\xe0\x41\x51\x50\xbb\xfd\xe5\xf0"
 "\x76\xff\xd3\x31\xc0\x50\xb8\x4f\x21\xed\x76"
 "\xff\xe0";
 
 int main(int argc, char **argv) {
-  int (*func)();             // указатель на функцию
-  func = (int (*)()) code;   // func указывает на наш shellcode
-  (int)(*func)();            // выполняем код в code[]
-  // если программа вернула 0 вместо 1,
-  // значит, shellcode сработал
+  int (*func)();             // function pointer
+  func = (int (*)()) code;   // func points to our shellcode
+  (int)(*func)();            // execute a function code[]
+  // if our program returned 0 instead of 1,
+  // so our shellcode worked
   return 1;
 }
 ```

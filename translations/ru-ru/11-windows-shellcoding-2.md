@@ -8,26 +8,26 @@
 В [первой](https://cocomelonc.github.io/tutorial/2021/10/27/windows-shellcoding-1.html) части моего поста о shellcoding в Windows мы находили адреса `kernel32` и функций, используя следующую логику:
 ```cpp
 /*
-getaddr.c - получение адресов функций
-(ExitProcess, WinExec) в памяти
+getaddr.c - get addresses of functions
+(ExitProcess, WinExec) in memory
 */
 #include <windows.h>
 #include <stdio.h>
 
 int main() {
-  unsigned long Kernel32Addr;      // адрес kernel32.dll
-  unsigned long ExitProcessAddr;   // адрес ExitProcess
-  unsigned long WinExecAddr;       // адрес WinExec
+  unsigned long Kernel32Addr;      // kernel32.dll address
+  unsigned long ExitProcessAddr;   // ExitProcess address
+  unsigned long WinExecAddr;       // WinExec address
 
   Kernel32Addr = GetModuleHandle("kernel32.dll");
-  printf("Адрес KERNEL32 в памяти: 0x%08p\n", Kernel32Addr);
+  printf("KERNEL32 address in memory: 0x%08p\n", Kernel32Addr);
 
   ExitProcessAddr = GetProcAddress(Kernel32Addr, "ExitProcess");
-  printf("Адрес ExitProcess в памяти: 0x%08p\n", 
+  printf("ExitProcess address in memory is: 0x%08p\n", 
   ExitProcessAddr);
 
   WinExecAddr = GetProcAddress(Kernel32Addr, "WinExec");
-  printf("Адрес WinExec в памяти: 0x%08p\n", WinExecAddr);
+  printf("WinExec address in memory is: 0x%08p\n", WinExecAddr);
 
   getchar();
   return 0;
@@ -37,11 +37,11 @@ int main() {
 Затем мы вставили найденный адрес в наш shellcode:
 ```nasm
 ; void ExitProcess([in] UINT uExitCode);
-xor  eax, eax         ; обнуляем eax
-push eax              ; кладем NULL в стек
-mov  eax, 0x76ed214f  ; вызов функции ExitProcess 
-                      ; по адресу в kernel32.dll
-jmp  eax              ; выполняем функцию ExitProcess
+xor  eax, eax         ; zero out eax
+push eax              ; push NULL
+mov  eax, 0x76ed214f  ; call ExitProcess function 
+                      ; addr in kernel32.dll
+jmp  eax              ; execute the ExitProcess function
 ```
 
 Проблема в том, что адреса всех DLL и их функций меняются при перезагрузке и различны для каждой системы. По этой причине мы не можем жестко задавать какие-либо адреса в нашем коде на ASM:        
@@ -195,26 +195,30 @@ dt _LDR_DATA_TABLE_ENTRY 0x511f70-8
 Во всех последних версиях Windows (по крайней мере, насколько мне известно) регистр `FS` указывает на `TEB`. Следовательно, для получения базового адреса `kernel32.dll` (`kernel.asm`):        
 
 ```nasm
-; найти kernel32
-; автор @cocomelonc
+; find kernel32
+; author @cocomelonc
 ; nasm -f win32 -o kernel.o kernel.asm
 ; ld -m i386pe -o kernel.exe kernel.o
-; 32-битная Windows
+; 32-bit windows
 
 section .data
 
 section .bss
 
 section .text
-  global _start               ; объявляем для линковщика
+  global _start               ; must be declared for linker
 
 _start:
-  mov eax, [fs:ecx + 0x30]    ; смещение до структуры PEB
-  mov eax, [eax + 0xc]        ; смещение до LDR внутри PEB
-  mov eax, [eax + 0x14]       ; смещение до InMemoryOrderModuleList
-  mov eax, [eax]              ; загруженный адрес kernel.exe (1-й модуль)
-  mov eax, [eax]              ; загруженный адрес ntdll.dll (2-й модуль)
-  mov eax, [eax + 0x10]       ; загруженный адрес kernel32.dll (3-й модуль)
+  mov eax, [fs:ecx + 0x30]    ; offset to the PEB struct
+  mov eax, [eax + 0xc]        ; offset to LDR within PEB
+  mov eax, [eax + 0x14]       ; offset to 
+                              ; InMemoryOrderModuleList
+  mov eax, [eax]              ; kernel.exe address loaded 
+                              ; in eax (1st module)
+  mov eax, [eax]              ; ntdll.dll address loaded
+                              ; (2nd module)
+  mov eax, [eax + 0x10]       ; kernel32.dll address 
+                              ; loaded (3rd module)
 ```
 
 С помощью этого кода на ассемблере мы можем найти адрес `kernel32.dll` и сохранить его в регистре `EAX`. Теперь компилируем:

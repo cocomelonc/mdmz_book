@@ -53,7 +53,7 @@ if (ptrace(PTRACE_ATTACH, target_pid, NULL, NULL) == -1) {
 struct user_regs_struct target_regs;
 //...
 //...
-// получаем текущие регистры
+// get the current registers
 printf("reading process registers\n");
 ptrace(PTRACE_GETREGS, target_pid, NULL, &target_regs);
 ```
@@ -61,7 +61,7 @@ ptrace(PTRACE_GETREGS, target_pid, NULL, &target_regs);
 Используя `PTRACE_PEEKDATA`, мы читаем память по указателю команд (`RIP`). Это важно для восстановления процесса в исходное состояние после инъекции. Для этого я создал функцию `read_mem`:     
 
 ```cpp
-// чтение памяти целевого процесса
+// read memory from the target process
 void read_mem(pid_t target_pid, long addr, char *buffer, int len) {
   union data_chunk {
     long val;
@@ -103,7 +103,7 @@ while (i < len / sizeof(long)) {
 }
 ```
 
-Как видите, здесь мы читаем `long` (обычно `8 байт` на `64-битных` системах) из памяти целевого процесса по определенному адресу. Затем считанные данные копируются в `buffer` с помощью `memcpy`. Это продолжается до тех пор, пока не будут прочитаны все полные блоки `sizeof(long)`.     
+Как видите, здесь мы читаем `long` (обычно `8`-байт на `64-bit` системах) из памяти целевого процесса по определенному адресу. Затем считанные данные копируются в `buffer` с помощью `memcpy`. Это продолжается до тех пор, пока не будут прочитаны все полные блоки `sizeof(long)`.     
 
 Затем обрабатываем оставшиеся байты:     
 
@@ -122,7 +122,7 @@ if (remaining) {
 С помощью `PTRACE_POKEDATA` мы внедряем собственный shellcode в память целевого процесса по адресу `RIP`.     
 
 ```cpp
-// запись памяти в целевой процесс
+// write memory into the target process
 void write_mem(pid_t target_pid, long addr, char *buffer, int len) {
   union data_chunk {
     long val;

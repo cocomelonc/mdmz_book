@@ -220,7 +220,7 @@ x86_64-w64-mingw32-gcc -O2 hack2.cpp -o hack2.exe
 ```cpp
 /*
 evil.cpp
-простая DLL для DLL-инъекции в процесс
+simple DLL for DLL-injection example
 author: @cocomelonc
 https://cocomelonc.github.io/tutorial/
 2021/09/20/malware-injection-2.html
@@ -286,6 +286,5 @@ x86_64-w64-mingw32-g++ -shared -o evil.dll evil.cpp -fpermissive
 [CreateRemoteThread](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethread)   
 [OpenProcess](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess)    
 [GetProcAddress](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)     
-[LoadLibraryA](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya)
-
+[LoadLibraryA](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya)    
 [исходный код на Github](https://github.com/cocomelonc/2021-09-29-processfind-1)

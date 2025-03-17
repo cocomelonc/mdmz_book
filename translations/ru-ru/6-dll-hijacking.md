@@ -156,7 +156,7 @@ DWORD ul_reason_for_call, LPVOID lpReserved) {
 [Process Monitor](https://docs.microsoft.com/en-us/sysinternals/downloads/procmon)     
 [icacls](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/icacls)    
 [DLL Export Viewer](https://www.nirsoft.net/utils/dll_export_viewer.html)      
-[Module-Definition (def) files](https://docs.microsoft.com/en-us/cpp/build/reference/module-definition-dot-def-files?view=msvc-160&viewFallbackFrom=vs-2019)
+[Module-Definition (def) files](https://docs.microsoft.com/en-us/cpp/build/reference/module-definition-dot-def-files?view=msvc-160&viewFallbackFrom=vs-2019)    
 [исходный код на Github](https://github.com/cocomelonc/2021-09-24-dllhijack)     
 
 Я добавил уязвимый bginfo (версия 4.16) на github, если вы захотите поэкспериментировать.   

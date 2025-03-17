@@ -12,8 +12,8 @@
 ```cpp
 /*
 hack.cpp
-инъекция кода через inline ASM
-автор: @cocomelonc
+code injection via inline ASM
+author: @cocomelonc
 https://cocomelonc.github.io/tutorial/
 2021/12/03/inline-asm-1.html
 */

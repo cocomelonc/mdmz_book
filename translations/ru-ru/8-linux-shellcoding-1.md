@@ -13,22 +13,22 @@
 
 Почему "shellcode"? Исторически shellcode - это машинный код, который при выполнении порождает оболочку (shell).        
 
-### Тестирование shellcode     
+### тестирование shellcode     
 
 При тестировании shellcode удобно просто вставить его в программу и запустить. Программа на C ниже будет использоваться для тестирования всего нашего кода (`run.c`):           
 ```cpp
 /*
-run.c - небольшой каркас программы для выполнения shellcode
+run.c - a small skeleton program to run shellcode
 */
-// здесь будет байт-код
-char code[] = "мой shellcode";
+// bytecode here
+char code[] = "my shellcode";
 
 int main(int argc, char **argv) {
-  int (*func)();             // указатель на функцию
-  func = (int (*)()) code;   // func указывает на наш shellcode
-  (int)(*func)();            // выполняем код в code[]
-  // если программа вернула 0 вместо 1,
-  // значит, shellcode сработал
+  int (*func)();             // function pointer
+  func = (int (*)()) code;   // func points to our shellcode
+  (int)(*func)();            // execute a function code[]
+  // if our program returned 0 instead of 1, 
+  // so our shellcode worked
   return 1;
 }
 ```
@@ -61,38 +61,29 @@ echo 2 > /proc/sys/kernel/randomize_va_space
 
 Набор регистров Intel x86:
 
-    EAX, EBX, ECX и EDX - 32-битные регистры общего назначения.           
-    AH, BH, CH и DH - доступ к старшим 16 битам регистров общего назначения.       
-    AL, BL, CL и DL - доступ к младшим 8 битам регистров общего назначения.        
-    EAX, AX, AH и AL называются "аккумуляторными" регистрами и могут использоваться 
-    для доступа к портам ввода-вывода, арифметических операций, вызовов прерываний и т. д.  
-    Эти регистры можно использовать для реализации системных вызовов.       
-    EBX, BX, BH и BL - "базовые" регистры, используемые в качестве указателей 
-    для доступа к памяти. Этот регистр также используется для хранения 
-    указателей на аргументы системных вызовов и иногда для хранения 
-    возвращаемого значения от прерывания.            
-    ECX, CX, CH и CL - "счетные" регистры.          
-    EDX, DX, DH и DL - "регистры данных", используемые для 
-    доступа к портам ввода-вывода, арифметики и некоторых прерываний.              
+- `EAX, EBX, ECX` и `EDX` - 32-битные регистры общего назначения.           
+- `AH, BH, CH` и `DH` - доступ к старшим 16 битам регистров общего назначения.       
+- `AL, BL, CL` и `DL` - доступ к младшим 8 битам регистров общего назначения.        
+- `EAX, AX, AH` и `AL` называются "аккумуляторными" регистрами и могут использоваться для доступа к портам ввода-вывода, арифметических операций, вызовов прерываний и т. д. Эти регистры можно использовать для реализации системных вызовов.       
+- `EBX, BX, BH` и `BL` - "базовые" регистры, используемые в качестве указателей для доступа к памяти. Этот регистр также используется для хранения указателей на аргументы системных вызовов и иногда для хранения  возвращаемого значения от прерывания.            
+- `ECX, CX, CH` и `CL` - "счетные" регистры.          
+- `EDX, DX, DH` и `DL` - "регистры данных", используемые для  доступа к портам ввода-вывода, арифметики и некоторых прерываний.              
 
 Инструкции ассемблера. Некоторые важные инструкции в программировании на ассемблере:    
 
-```nasm
-mov  eax, 32       ; присвоение: eax = 32
-xor  eax, eax      ; исключающее ИЛИ
-push eax           ; поместить что-то в стек
-pop  ebx           ; извлечь что-то из стека 
-; (что было в стеке, сохранить в регистре/переменной)
-call mysuperfunc   ; вызов функции
-int  0x80          ; прерывание, команда ядра
-```
+- `mov  eax, 32`       ; присвоение: eax = 32   
+- `xor  eax, eax`      ; исключающее ИЛИ   
+- `push eax`           ; поместить что-то в стек   
+- `pop  ebx`           ; извлечь что-то из стека, (что было в стеке, сохранить в регистре/переменной)    
+- `call mysuperfunc`   ; вызов функции    
+- `int  0x80`          ; прерывание, команда ядра    
 
 Системные вызовы Linux. Системные вызовы - это API-интерфейсы между пространством пользователя и пространством ядра. Вы можете использовать системные вызовы Linux в своих ассемблерных программах. Для этого необходимо выполнить следующие шаги:
 
-    Поместить номер системного вызова в регистр EAX.   
-    Сохранить аргументы системного вызова в регистрах EBX, ECX и т. д.   
-    Вызвать соответствующее прерывание (0x80).   
-    Результат обычно возвращается в регистре EAX.   
+- Поместить номер системного вызова в регистр EAX.   
+- Сохранить аргументы системного вызова в регистрах EBX, ECX и т. д.   
+- Вызвать соответствующее прерывание (0x80).   
+- Результат обычно возвращается в регистре EAX.   
 
 Все системные вызовы x86 перечислены в файле `/usr/include/asm/unistd_32.h`.    
 
@@ -127,7 +118,7 @@ gdb -q ./exit0
 Давайте разберем простую программу:      
 ```cpp
 /*
-meow.c - демонстрация nullbytes
+meow.c - for demo nullbytes
 */
 #include <stdio.h>
 int main(void) {
@@ -188,25 +179,25 @@ objdump -M intel -d exit1
 
 Теперь `exit2.asm`:             
 ```nasm
-; обычный выход
-; автор @cocomelonc
+; just normal exit
+; author @cocomelonc
 ; nasm -f elf32 -o exit2.o exit2.asm
 ; ld -m elf_i386 -o exit2 exit2.o && ./exit2
-; 32-битный Linux
+; 32-bit linux
 
 section .data
 
 section .bss
 
 section .text
-  global _start   ; точка входа для линковщика
+  global _start   ; must be declared for linker
 
-; нормальный выход
-_start:           ; точка входа
-  xor eax, eax    ; обнуляем eax
-  mov al, 1       ; системный вызов sys_exit (mov eax, 1) 
-                  ; без нулевых байтов
-  int 0x80        ; вызываем sys_exit
+; normal exit
+_start:           ; linker entry point
+  xor eax, eax    ; zero out eax
+  mov al, 1       ; sys_exit system call (mov eax, 1) 
+                  ; with remove null bytes
+  int 0x80        ; call sys_exit
 ```
 
 Компилируем и исследуем `exit2.asm`:
@@ -229,25 +220,25 @@ objdump -M intel -d exit2
 
 Начнем с самого простого примера. Используем наш код `exit.asm` в качестве первого примера для shellcoding (`example1.asm`):
 ```nasm
-; обычный выход
-; автор @cocomelonc
+; just normal exit
+; author @cocomelonc
 ; nasm -f elf32 -o example1.o example1.asm
 ; ld -m elf_i386 -o example1 example1.o && ./example1
-; 32-битный Linux
+; 32-bit linux
 
 section .data
 
 section .bss
 
 section .text
-  global _start   ; точка входа для линковщика
+  global _start   ; must be declared for linker
 
-; нормальный выход
-_start:           ; точка входа
-  xor eax, eax    ; обнуляем eax
-  mov al, 1       ; системный вызов sys_exit (mov eax, 1) 
-                  ; без нулевых байтов
-  int 0x80        ; вызываем sys_exit
+; normal exit
+_start:           ; linker entry point
+  xor eax, eax    ; zero out eax
+  mov al, 1       ; sys_exit system call (mov eax, 1) 
+                  ; with remove null bytes
+  int 0x80        ; call sys_exit
 ```
 
 Обратите внимание на трюк с `al` и `XOR`, который гарантирует, что в наш код не попадут NULL-байты.  
@@ -299,11 +290,11 @@ echo $?
 
 Теперь напишем простой shellcode, который порождает оболочку (`example2.asm`):       
 ```nasm
-; example2.asm - запуск оболочки Linux.
-; автор @cocomelonc
+; example2.asm - spawn a linux shell.
+; author @cocomelonc
 ; nasm -f elf32 -o example2.o example2.asm
 ; ld -m elf_i386 -o example2 example2.o && ./example2
-; 32-битный Linux
+; 32-bit linux
 
 section .data
   msg: db '/bin/sh'
@@ -311,26 +302,26 @@ section .data
 section .bss
 
 section .text
-  global _start   ; точка входа для линковщика
+  global _start   ; must be declared for linker
 
-_start:           ; точка входа
+_start:           ; linker entry point
 
-  ; xoring любого значения с самим собой обнуляет его:
-  xor eax, eax    ; обнуляем eax
-  xor ebx, ebx    ; обнуляем ebx
-  xor ecx, ecx    ; обнуляем ecx
-  xor edx, edx    ; обнуляем edx
+  ; xoring anything with itself clears itself:
+  xor eax, eax    ; zero out eax
+  xor ebx, ebx    ; zero out ebx
+  xor ecx, ecx    ; zero out ecx
+  xor edx, edx    ; zero out edx
 
   mov al, 0xb     ; mov eax, 11: execve
-  mov ebx, msg    ; загружаем указатель на строку в ebx
-  int 0x80        ; системный вызов
+  mov ebx, msg    ; load the string pointer to ebx
+  int 0x80        ; syscall
 
-  ; обычный выход
-  mov al, 1       ; системный вызов sys_exit 
-                  ; (mov eax, 1) без 
-                  ; нулевых байтов
-  xor ebx, ebx    ; без ошибок (mov ebx, 0)
-  int 0x80        ; вызываем sys_exit
+  ; normal exit
+  mov al, 1       ; sys_exit system call 
+                  ; (mov eax, 1) with remove 
+                  ; null bytes
+  xor ebx, ebx    ; no errors (mov ebx, 0)
+  int 0x80        ; call sys_exit
 ```
 
 Для компиляции используем следующие команды:       
@@ -356,31 +347,31 @@ ld -m elf_i386 -o example2 example2.o
 Теперь запишем код без нулевых байтов, используя стек для хранения переменных (`example3.asm`):
 
 ```nasm
-; запуск /bin/sh и нормальный выход
-; автор @cocomelonc
+; run /bin/sh and normal exit
+; author @cocomelonc
 ; nasm -f elf32 -o example3.o example3.asm
 ; ld -m elf_i386 -o example3 example3.o && ./example3
-; 32-битный Linux
+; 32-bit linux
 
 section .bss
 
 section .text
-  global _start   ; точка входа для линковщика
+  global _start   ; must be declared for linker
 
-_start:           ; точка входа
+_start:           ; linker entry point
 
-  ; xoring любого значения с самим собой обнуляет его:
-  xor eax, eax    ; обнуляем eax
-  xor ebx, ebx    ; обнуляем ebx
-  xor ecx, ecx    ; обнуляем ecx
-  xor edx, edx    ; обнуляем edx
+  ; xoring anything with itself clears itself:
+  xor eax, eax    ; zero out eax
+  xor ebx, ebx    ; zero out ebx
+  xor ecx, ecx    ; zero out ecx
+  xor edx, edx    ; zero out edx
 
-  push eax        ; терминатор строки
+  push eax        ; string terminator
   push 0x68732f6e ; "hs/n"
   push 0x69622f2f ; "ib//"
-  mov ebx, esp    ; "//bin/sh",0 указатель на ESP
+  mov ebx, esp    ; "//bin/sh",0 pointer is ESP
   mov al, 0xb     ; mov eax, 11: execve
-  int 0x80        ; системный вызов
+  int 0x80        ; syscall
 ```
 
 Теперь соберем код и проверим его работоспособность, а также убедимся, что он не содержит нулевых байтов:
@@ -413,19 +404,19 @@ sed 's/^/"/'|sed 's/$/"/g'
 Затем заменяем код в `run.c` следующим:     
 ```cpp
 /*
-run.c - небольшой каркас программы для выполнения shellcode
+run.c - a small skeleton program to run shellcode
 */
-// вставляем наш байт-код
+// bytecode here
 char code[] = "\x31\xc0\x31\xdb\x31\xc9\x31"
 "\xd2\x50\x68\x6e\x2f\x73\x68\x68"
 "\x2f\x2f\x62\x69\x89\xe3\xb0\x0b\xcd\x80";
 
 int main(int argc, char **argv) {
-  int (*func)();             // указатель на функцию
-  func = (int (*)()) code;   // func указывает на наш shellcode
-  (int)(*func)();            // выполняем код в code[]
-  // если программа вернула 0 вместо 1,
-  // значит, shellcode сработал
+  int (*func)();             // function pointer
+  func = (int (*)()) code;   // func points to our shellcode
+  (int)(*func)();            // execute a function code[]
+  // if our program returned 0 instead of 1, 
+  // so our shellcode worked
   return 1;
 }
 ```

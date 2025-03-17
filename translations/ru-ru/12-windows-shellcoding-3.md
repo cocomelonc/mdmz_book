@@ -24,25 +24,25 @@
 Структура заголовка DOS:          
 ```cpp
 typedef struct _IMAGE_DOS_HEADER {// DOS .EXE header
-    WORD   e_magic;       // Магическое число
-    WORD   e_cblp;        // Количество байт на последней странице файла
-    WORD   e_cp;          // Количество страниц в файле
-    WORD   e_crlc;        // Количество переадресаций
-    WORD   e_cparhdr;     // Размер заголовка в параграфах
-    WORD   e_minalloc;    // Минимальное количество дополнительных параграфов
-    WORD   e_maxalloc;    // Максимальное количество дополнительных параграфов
-    WORD   e_ss;          // Начальное (относительное) значение SS
-    WORD   e_sp;          // Начальное значение SP
-    WORD   e_csum;        // Контрольная сумма
-    WORD   e_ip;          // Начальное значение IP
-    WORD   e_cs;          // Начальное (относительное) значение CS
-    WORD   e_lfarlc;      // Файловый адрес таблицы переадресации
-    WORD   e_ovno;        // Номер оверлея
-    WORD   e_res[4];      // Зарезервированные слова
-    WORD   e_oemid;       // OEM-идентификатор
-    WORD   e_oeminfo;     // OEM-информация
-    WORD   e_res2[10];    // Зарезервированные слова
-    LONG   e_lfanew;      // Файловый адрес нового заголовка EXE
+    WORD   e_magic;       // Magic number
+    WORD   e_cblp;        // Bytes on last page of file
+    WORD   e_cp;          // Pages in file
+    WORD   e_crlc;        // Relocations
+    WORD   e_cparhdr;     // Size of header in paragraphs
+    WORD   e_minalloc;    // Minimum extra paragraphs needed
+    WORD   e_maxalloc;    // Maximum extra paragraphs needed
+    WORD   e_ss;          // Initial (relative) SS value
+    WORD   e_sp;          // Initial SP value
+    WORD   e_csum;        // Checksum
+    WORD   e_ip;          // Initial IP value
+    WORD   e_cs;          // Initial (relative) CS value
+    WORD   e_lfarlc;      // File address of relocation table
+    WORD   e_ovno;        // Overlay number
+    WORD   e_res[4];      // Reserved words
+    WORD   e_oemid;       // OEM identifier (for e_oeminfo)
+    WORD   e_oeminfo;     // OEM information; e_oemid specific
+    WORD   e_res2[10];    // Reserved words
+    LONG   e_lfanew;      // File address of new exe header
   } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
 ```
 

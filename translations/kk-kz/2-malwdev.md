@@ -1,11 +1,11 @@
 \newpage
-\subsection{2. what is malware development?}\label{2. what is malware development?}
+\subsection{2. зиянды бағдарламаны әзірлеу дегеніміз не?}\label{2. зиянды бағдарламаны әзірлеу дегеніміз не?}
 
 ﷽
 
-Whether you are a Red Team or Blue Team specialist, learning the techniques and tricks of malware development gives you the most complete picture of advanced attacks. Additionally, the majority of classic malwares are typically written under Windows, providing you with practical knowledge in Windows development.
+Red Team немесе Blue Team маманы болсаңыз да, зиянды бағдарламаларды әзірлеу әдістері мен айла-амалдарын үйрену сізге жетілдірілген шабуылдардың толық көрінісін береді. Сонымен қатар, классикалық зиянды бағдарламалардың көпшілігі әдетте Windows жүйесінде жазылады, бұл сізге Windows операциялық жүйесіне арналған бағдарламаларды әзірлеуде практикалық білім береді.     
 
-Most of the tutorials in this book require a deep understanding of the `Python` and `C/C++` programming languages:
+Бұл кітаптағы оқу құралдар мен мысалдардың көпшілігі `Python` және `C/C++` бағдарламалау тілдерін терең түсінуді талап етеді:    
 
 ```cpp
 #include <stdio.h>
@@ -47,7 +47,7 @@ int main() {
 }
 ```
 
-At times, we need to understand some code in the Nim programming language:    
+Кейде бізге Nim бағдарламалау тіліндегі кейбір кодты түсіну де қажет:    
 
 ```python
 import strutils
@@ -66,15 +66,15 @@ echo enc
 echo caesar(enc, 11, decode = true)
 ```
 
-The main logic divides the book into five (4 + 1 bonus) chapters:     
-- Malware development tricks and techniques     
-- AV evasion tricks    
-- Persistence techniques    
-- Malware, Cryptography, Research     
-- Intro to linux malware development    
+Негізі логикалық тұрғыдан кітап бес (4 + 1 бонус) тарауға бөлінеді:
+- Зиянды бағдарлаларды жазудың түрлі айла-амалдары мен әдістері     
+- Антивирусты (AV) алдау амалдары    
+- Табандылық техникалары     
+- Зиянды бағдарлама, криптография және зерттеулер      
+- Linux зиянды бағдарламаларын әзірлеуге кіріспе      
 
-All of the material in the book is based on posts from my [blog](https://cocomelonc.github.io/)   
+Кітаптағы барлық материалдар менің [блогымдағы](https://cocomelonc.github.io/) жазбалардан негізделген.    
 
-If you have questions, you can ask them on my [email](mailto:cocomelonkz@gmail.com)   
+Сұрақтарыңыз болса, менің [элетронды поштам](mailto:cocomelonkz@gmail.com) арқылы қоюға болады    
 
-My Github repo: [https://github.com/cocomelonc](https://github.com/cocomelonc)    
+Менің Github репозиториям: [https://github.com/cocomelonc](https://github.com/cocomelonc)    

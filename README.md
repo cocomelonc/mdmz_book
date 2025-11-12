@@ -30,4 +30,5 @@ Main font:
 other books:
 
 [Malware in the Wild Book (2023)](https://cocomelonc.github.io/book/2023/12/13/malwild-book.html)     
-[Malware Development for Ethical Hackers (Packt, 2024)](https://github.com/PacktPublishing/Malware-Development-for-Ethical-Hackers/)
+[Malware Development for Ethical Hackers (Packt, 2024)](https://github.com/PacktPublishing/Malware-Development-for-Ethical-Hackers/)    
+[AIYA Mobile Malware Development Book (Github, 2025)](https://github.com/cocomelonc/aiya_mmd_book)    
